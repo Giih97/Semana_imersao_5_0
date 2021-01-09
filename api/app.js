@@ -3,9 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-require('./models/metas');
+require('./models/Metas');
 
-const Meta = mongoose.model('meta');
+const Meta = mongoose.model('Meta');
 const app = express();
 
 app.use(express.json());
@@ -17,6 +17,7 @@ app.use((req,res, next) => {  //next para continuar o processamento
     next();
 });   
 
+// conexao com banco de dados
 mongoose.connect('mongodb://localhost/gilda',{
     useNewUrlParser:true,
     useUnifiedTopology:true,
@@ -41,6 +42,12 @@ app.get('/metas', async (req, res) => {
 });
 });
   app.post('/metas', async (req, res) => {              // cadastrar
+      await sleep(3000);                  // pausa a api em 3mse
+      function sleep(ms){
+          return new Promise((resolve) =>{
+              setTimeout(resolve,ms);
+          });
+      }
     await Meta.create(req.body, (err)=>{  // inserir no bd, await aguarda o processamento
         if(err) return res.status(400).json({  // se houve algum erro através da fn , retorno um status 400
         error:true,             // houve um erro ,sim
